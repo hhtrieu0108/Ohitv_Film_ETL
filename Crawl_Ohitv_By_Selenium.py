@@ -3,57 +3,6 @@ from selenium.webdriver.common.by import By
 import pandas as pd
 from time import sleep
 
-
-class Postgres_Import:
-    def __init__(self, database, uid, pwd, host, port):
-        self.database = database
-        self.uid = uid
-        self.pwd = pwd
-        self.host = host
-        self.port = port
-        self.conn = None
-
-    def connect_postgre_sql(self):
-        import psycopg2
-        conn = psycopg2.connect(dbname=self.database, user=self.uid, password=self.pwd, host=self.host, port=self.port)
-        self.conn = conn
-
-    def select_all(self, table):
-        import pandas as pd
-        self.table = table
-        sql_query = f'SELECT * FROM {self.table}'
-
-        # Read the SQL query result into a DataFrame
-        df = pd.read_sql(sql_query, self.conn)
-        self.conn.close()
-        return df
-
-
-class Oracle_Import:
-    def __init__(self, server, uid, pwd):
-        self.server = server
-        self.uid = uid
-        self.df = None
-        self.pwd = pwd
-        self.table = None
-        self.conn = None
-
-    def connect_oracle_sql(self):
-        import cx_Oracle
-
-        connection = cx_Oracle.connect(self.uid, self.pwd, self.server)
-        self.conn = connection
-
-    def select_all(self, table):
-        import pandas as pd
-        self.table = table
-        sql_query = f'SELECT * FROM {self.table}'
-        # Read the SQL query result into a DataFrame
-        df = pd.read_sql(sql_query, self.conn)
-        self.conn.close()
-        return df
-
-
 class SQLserver_Import:
     def __init__(self, driver, server, database, uid, pwd):
         self.driver = driver
@@ -135,9 +84,8 @@ def Crawl_Data_NoFeature():
     data['feature'] = 'No'
 
     driver.quit()
-    
-    return data
 
+    return data
 
 def Processing_Data(nofeaturen_film,feature_film):
     def return_feature(data):
@@ -183,7 +131,6 @@ def Load_data_to_SQLServer(data_1,data_2,table_name_1,table_name_2):
     sql.import_sql(data_2,table_name_2)
     sql.close()
 
-
 if __name__ == "__main__":
     feature_film = Crawl_Data_Feature("https://ohitv.net/phim-le/page/1/")
     nofeature_film = Crawl_Data_NoFeature()
@@ -191,5 +138,5 @@ if __name__ == "__main__":
     Load_data_to_SQLServer( data_1=all_film_data,
                             data_2=all_film_data_nodup,
                             table_name_1='ohitv_film',
-                            table_name_2='ohitv_film_nodup' )
+                            table_name_2='ohitv_film_nodup')
 
