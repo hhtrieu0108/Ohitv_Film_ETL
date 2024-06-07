@@ -100,12 +100,12 @@ def Processing_Data(nofeaturen_film,feature_film):
     return new_data,new_data_nodup
 
 
-def Load_data_to_SQLServer(data_1,data_2,table_name_1,table_name_2):
-    sql = SQLserver_Import(driver='{ODBC Driver 17 for SQL Server}',
-                           server='LAPTOP\TIDE',
-                           database='Ohitv',
-                           uid='userid',
-                           pwd='password')
+def Load_data_to_SQLServer(data_1,driver,server,database,userid,password,data_2,table_name_1,table_name_2):
+    sql = SQLserver_Import(driver=f'{driver}',
+                           server=f'{server}',
+                           database=f'{database}',
+                           uid=f'{userid}',
+                           pwd=f'{password}')
     sql.connect_server_sql()
     create_table_query_1 = f"""
     CREATE TABLE {table_name_1} (
@@ -137,6 +137,10 @@ if __name__ == "__main__":
     all_film_data,all_film_data_nodup = Processing_Data(nofeature_film,feature_film)
     Load_data_to_SQLServer( data_1=all_film_data,
                             data_2=all_film_data_nodup,
+                            driver='your_driver',
+                            database='your_databaes',
+                            userid= 'your_userid',
+                            password= 'your_password',
                             table_name_1='ohitv_film',
                             table_name_2='ohitv_film_nodup')
 
