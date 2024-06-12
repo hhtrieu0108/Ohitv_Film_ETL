@@ -107,6 +107,10 @@ def Load_data_to_SQLServer(data_1,driver,server,database,userid,password,data_2,
                            uid=f'{userid}',
                            pwd=f'{password}')
     sql.connect_server_sql()
+    
+    check_exist_table_query_1 = f"DROP TABLE IF EXISTS {table_name_1};"
+    
+    
     create_table_query_1 = f"""
     CREATE TABLE {table_name_1} (
         title nvarchar(100),
@@ -115,6 +119,9 @@ def Load_data_to_SQLServer(data_1,driver,server,database,userid,password,data_2,
         isfeature nvarchar(10)
     )
     """
+
+    check_exist_table_query_2 = f"DROP TABLE IF EXISTS {table_name_2};"
+
     create_table_query_2 = f"""
     CREATE TABLE {table_name_2} (
         title nvarchar(100),
@@ -123,8 +130,9 @@ def Load_data_to_SQLServer(data_1,driver,server,database,userid,password,data_2,
         isfeature nvarchar(10)
     )
     """
-
+    sql.cursur.execute(check_exist_table_query_1)
     sql.cursur.execute(create_table_query_1)
+    sql.cursur.execute(check_exist_table_query_2)
     sql.cursur.execute(create_table_query_2)
     sql.conn.commit()
     sql.import_sql(data_1,table_name_1)
