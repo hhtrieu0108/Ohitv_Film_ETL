@@ -8,6 +8,7 @@ def get_soup(url):
     html = requests.get(url)
     soup = BeautifulSoup(html.text,'html.parser')
     return soup
+
 def get_url():
     url = "https://ohitv.net/"
     soup = get_soup(url)
@@ -162,9 +163,10 @@ def load_data_base(df,username,password,host,database,table_name):
 if __name__ == "__main__":
     df = convert_to_dataframe()
     load_data_base(
-                    df=df,username='postgres',
-                    password='304018',
-                    host='localhost',       
-                    database='ohitv',
+                    df=df,
+                    username='your_username',
+                    password='your_password',
+                    host='your_localhost',       
+                    database='your_database',
                     table_name='ohitv_request'
                     )
