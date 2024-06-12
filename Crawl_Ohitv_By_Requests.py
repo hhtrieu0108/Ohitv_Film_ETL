@@ -8,6 +8,7 @@ def get_soup(url):
     html = requests.get(url)
     soup = BeautifulSoup(html.text,'html.parser')
     return soup
+
 def get_url():
     url = "https://ohitv.net/"
     soup = get_soup(url)
@@ -150,7 +151,7 @@ def convert_to_dataframe():
     df = pd.DataFrame(list(zip(title,film_link,date,rating,quality,genre,short_des)),columns=['title','links','date','rating','quality','genre','short_description'])
     return df
 
-def load_data_base(df,username,password,host,database,table_name):
+def load_to_database(df,username,password,host,database,table_name):
     """
     definition : import to postgres database and save to local an csv file
     """
@@ -161,10 +162,11 @@ def load_data_base(df,username,password,host,database,table_name):
 
 if __name__ == "__main__":
     df = convert_to_dataframe()
-    load_data_base(
-                    df=df,username='postgres',
-                    password='304018',
-                    host='localhost',       
-                    database='ohitv',
+    load_to_database(
+                    df=df,
+                    username='your_username',
+                    password='your_password',
+                    host='your_localhost',       
+                    database='your_database',
                     table_name='ohitv_request'
                     )
