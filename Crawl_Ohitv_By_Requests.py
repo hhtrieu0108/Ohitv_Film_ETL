@@ -151,7 +151,7 @@ def convert_to_dataframe():
     df = pd.DataFrame(list(zip(title,film_link,date,rating,quality,genre,short_des)),columns=['title','links','date','rating','quality','genre','short_description'])
     return df
 
-def load_data_base(df,username,password,host,database,table_name):
+def load_to_database(df,username,password,host,database,table_name):
     """
     definition : import to postgres database and save to local an csv file
     """
@@ -162,7 +162,7 @@ def load_data_base(df,username,password,host,database,table_name):
 
 if __name__ == "__main__":
     df = convert_to_dataframe()
-    load_data_base(
+    load_to_database(
                     df=df,
                     username='your_username',
                     password='your_password',
