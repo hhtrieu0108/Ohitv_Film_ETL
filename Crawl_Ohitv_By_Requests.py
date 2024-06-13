@@ -164,9 +164,9 @@ if __name__ == "__main__":
     processed_df = processing(df=df)
     load_to_database(
                     df=processed_df,
-                    username='postgres',
-                    password='304018',
-                    host='localhost',       
-                    database='ohitv',
+                    username='your_username',
+                    password='your_password',
+                    host='your_host',       
+                    database='your_database',
                     table_name='ohitv_request'
                     )
