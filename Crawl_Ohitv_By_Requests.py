@@ -144,6 +144,11 @@ def convert_to_dataframe(kind_href):
     df = pd.DataFrame(list(zip(title,film_link,date,rating,quality,genre,short_des)),columns=['title','links','date','rating','quality','genre','short_description'])
     return df
 
+def processing(df):
+    new_df = df.copy()
+    new_df = new_df.drop_duplicates('title')
+    return new_df
+
 def load_to_database(df,username,password,host,database,table_name):
     """
     definition : import to postgres database and save to local an csv file
@@ -156,8 +161,9 @@ def load_to_database(df,username,password,host,database,table_name):
 if __name__ == "__main__":
     kind_href = get_url()
     df = convert_to_dataframe(kind_href=kind_href)
+    processed_df = processing(df=df)
     load_to_database(
-                    df=df,
+                    df=processed_df,
                     username='postgres',
                     password='304018',
                     host='localhost',       
