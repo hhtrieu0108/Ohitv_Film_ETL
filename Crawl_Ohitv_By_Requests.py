@@ -26,9 +26,8 @@ def get_page(soup):
             pages.append(page_href['href'])
     return pages
 
-def crawl_title():
+def crawl_title(kind_href):
     title = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         data_html = soup.find('div',class_='items normal').find_all('div',class_='data')
@@ -42,9 +41,8 @@ def crawl_title():
             title.extend(title_2)
     return title
 
-def crawl_film_link():
+def crawl_film_link(kind_href):
     film_link = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         data_html = soup.find('div',class_='items normal').find_all('div',class_='data')
@@ -58,9 +56,8 @@ def crawl_film_link():
             film_link.extend(film_link_2)
     return film_link
 
-def crawl_date():
+def crawl_date(kind_href):
     date = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         data_html = soup.find('div',class_='items normal').find_all('div',class_='data')
@@ -74,9 +71,8 @@ def crawl_date():
             date.extend(date_2)
     return date
 
-def crawl_rating():
+def crawl_rating(kind_href):
     rating = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         rating_data = soup.find_all('div',class_='rating')
@@ -90,9 +86,8 @@ def crawl_rating():
             rating.extend(rating_2)
     return rating
         
-def crawl_quality():
+def crawl_quality(kind_href):
     quality = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         quality_data = soup.find_all('div',class_='mepo')
@@ -106,9 +101,8 @@ def crawl_quality():
             quality.extend(quality_2)
     return quality
 
-def crawl_genre():
+def crawl_genre(kind_href):
     genre = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         genre_data = soup.find_all('div',class_='mta')
@@ -124,9 +118,8 @@ def crawl_genre():
                 genre.append(sub_type)
     return genre
 
-def crawl_short_description():
+def crawl_short_description(kind_href):
     short_des = []
-    kind_href = get_url()
     for link in kind_href:
         soup = get_soup(link)
         short_des_data = soup.find_all('div',class_='texto')
@@ -140,14 +133,14 @@ def crawl_short_description():
             short_des.extend(short_des_2)
     return short_des
 
-def convert_to_dataframe():
-    title = crawl_title()
-    film_link = crawl_film_link()
-    date = crawl_date()
-    rating = crawl_rating()
-    quality = crawl_quality()
-    genre = crawl_genre()
-    short_des = crawl_short_description()
+def convert_to_dataframe(kind_href):
+    title = crawl_title(kind_href=kind_href)
+    film_link = crawl_film_link(kind_href=kind_href)
+    date = crawl_date(kind_href=kind_href)
+    rating = crawl_rating(kind_href=kind_href)
+    quality = crawl_quality(kind_href=kind_href)
+    genre = crawl_genre(kind_href=kind_href)
+    short_des = crawl_short_description(kind_href=kind_href)
     df = pd.DataFrame(list(zip(title,film_link,date,rating,quality,genre,short_des)),columns=['title','links','date','rating','quality','genre','short_description'])
     return df
 
@@ -161,12 +154,13 @@ def load_to_database(df,username,password,host,database,table_name):
     df.to_sql(f"{table_name}", engine, if_exists='replace', index=False)
 
 if __name__ == "__main__":
-    df = convert_to_dataframe()
+    kind_href = get_url()
+    df = convert_to_dataframe(kind_href=kind_href)
     load_to_database(
                     df=df,
-                    username='your_username',
-                    password='your_password',
-                    host='your_localhost',       
-                    database='your_database',
+                    username='postgres',
+                    password='304018',
+                    host='localhost',       
+                    database='ohitv',
                     table_name='ohitv_request'
                     )
