@@ -1,3 +1,9 @@
+"""
+@author : hhtrieu0108
+github : https://github.com/hhtrieu0108
+linkedin : https://www.linkedin.com/in/trieuhh
+"""
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
