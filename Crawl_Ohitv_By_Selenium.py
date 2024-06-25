@@ -1,3 +1,9 @@
+"""
+@author : hhtrieu0108
+github : https://github.com/hhtrieu0108
+linkedin : https://www.linkedin.com/in/trieuhh
+"""
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import pandas as pd
