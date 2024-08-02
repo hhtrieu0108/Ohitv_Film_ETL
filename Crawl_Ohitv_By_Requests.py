@@ -3,22 +3,20 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from sqlalchemy import create_engine
 
-
-def get_soup(url):
+def get_soup(url: str) -> BeautifulSoup:
     html = requests.get(url)
     soup = BeautifulSoup(html.text,'html.parser')
     return soup
 
-def get_url():
+def get_url() -> list:
     url = "https://ohitv.net/"
     soup = get_soup(url)
-    kind_href = []
     kind_menu = soup.find_all('ul',class_='sub-menu')[1].find_all('a',href=True)
     kind_link = [link for link in kind_menu]
     kind_href = [link['href'] for link in kind_link]
     return kind_href
 
-def get_page(soup):
+def get_page(soup: BeautifulSoup) -> list:
     pages = []
     page_list = soup.find_all('div',class_='pagination')
     for page_number in page_list:
@@ -26,7 +24,7 @@ def get_page(soup):
             pages.append(page_href['href'])
     return pages
 
-def crawl_title(kind_href):
+def crawl_title(kind_href: list) -> list:
     title = []
     for link in kind_href:
         soup = get_soup(link)
@@ -41,7 +39,7 @@ def crawl_title(kind_href):
             title.extend(title_2)
     return title
 
-def crawl_film_link(kind_href):
+def crawl_film_link(kind_href: list) -> list:
     film_link = []
     for link in kind_href:
         soup = get_soup(link)
@@ -56,7 +54,7 @@ def crawl_film_link(kind_href):
             film_link.extend(film_link_2)
     return film_link
 
-def crawl_date(kind_href):
+def crawl_date(kind_href: list) -> list:
     date = []
     for link in kind_href:
         soup = get_soup(link)
@@ -71,7 +69,7 @@ def crawl_date(kind_href):
             date.extend(date_2)
     return date
 
-def crawl_rating(kind_href):
+def crawl_rating(kind_href: list) -> list:
     rating = []
     for link in kind_href:
         soup = get_soup(link)
@@ -85,8 +83,8 @@ def crawl_rating(kind_href):
             rating_2 = [rating_param.text for rating_param in rating_data]
             rating.extend(rating_2)
     return rating
-        
-def crawl_quality(kind_href):
+
+def crawl_quality(kind_href: list) -> list:
     quality = []
     for link in kind_href:
         soup = get_soup(link)
@@ -101,7 +99,7 @@ def crawl_quality(kind_href):
             quality.extend(quality_2)
     return quality
 
-def crawl_genre(kind_href):
+def crawl_genre(kind_href: list) -> list:
     genre = []
     for link in kind_href:
         soup = get_soup(link)
@@ -118,7 +116,7 @@ def crawl_genre(kind_href):
                 genre.append(sub_type)
     return genre
 
-def crawl_short_description(kind_href):
+def crawl_short_description(kind_href: list) -> list:
     short_des = []
     for link in kind_href:
         soup = get_soup(link)
@@ -133,7 +131,7 @@ def crawl_short_description(kind_href):
             short_des.extend(short_des_2)
     return short_des
 
-def convert_to_dataframe(kind_href):
+def convert_to_dataframe(kind_href: list) -> pd.DataFrame:
     title = crawl_title(kind_href=kind_href)
     film_link = crawl_film_link(kind_href=kind_href)
     date = crawl_date(kind_href=kind_href)
@@ -144,9 +142,9 @@ def convert_to_dataframe(kind_href):
     df = pd.DataFrame(list(zip(title,film_link,date,rating,quality,genre,short_des)),columns=['title','links','date','rating','quality','genre','short_description'])
     return df
 
-def processing(df):
+def processing(df: pd.DataFrame) -> pd.DataFrame:
     new_df = df.copy()
-    new_df = new_df.drop_duplicates('title')
+    new_df['date'] = pd.to_datetime(new_df['date'], format='%d/%m/%Y',errors='coerce')
     return new_df
 
 def load_to_database(df,username,password,host,database,table_name):
@@ -166,7 +164,7 @@ if __name__ == "__main__":
                     df=processed_df,
                     username='your_username',
                     password='your_password',
-                    host='your_host',       
+                    host='your_host',
                     database='your_database',
                     table_name='ohitv_request'
                     )
